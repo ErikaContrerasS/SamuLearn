@@ -408,7 +408,7 @@ const readingStories = [
 
 const PixelRobotGame = () => {
   const [currentLevel, setCurrentLevel] = useState(0);
-  const [gameMode, setGameMode] = useState("menu"); // menu, pixel, robot, analysis, reading, readingStats
+  const [gameMode, setGameMode] = useState("menu"); // menu, pixel, robot, analysis, reading, readingStats, mathExam
   const [stars, setStars] = useState(0);
   const [readingStats, setReadingStats] = useState(() => {
     try {
@@ -1119,6 +1119,12 @@ const PixelRobotGame = () => {
             setLongMultiStats={setLongMultiStats}
           />
         )}
+        {gameMode === "mathExam" && (
+          <MathExamGame
+            setGameMode={setGameMode}
+            setStars={setStars}
+          />
+        )}
       </div>
     </div>
   );
@@ -1144,7 +1150,7 @@ const MainMenu = ({ setGameMode, stars }) => {
       </div>
 
       {/* Juegos principales */}
-      <div className="grid grid-cols-1 md:grid-cols-3 gap-4 mt-8">
+      <div className="grid grid-cols-1 md:grid-cols-4 gap-4 mt-8">
         <button
           onClick={() => setGameMode("pixel")}
           className="bg-gradient-to-br from-pink-500 to-purple-600 text-white rounded-2xl p-6 hover:scale-105 transition-transform shadow-lg text-left"
@@ -1216,7 +1222,17 @@ const MainMenu = ({ setGameMode, stars }) => {
           <div className="mt-3 text-xs font-semibold bg-white/20 rounded-full px-3 py-1 inline-block">Aprende · Practica · Examen</div>
         </button>
 
-        <p className="md:col-span-3 text-center text-xs text-gray-400 mt-2">
+        <button
+          onClick={() => setGameMode("mathExam")}
+          className="bg-gradient-to-br from-emerald-500 to-green-700 text-white rounded-2xl p-6 hover:scale-105 transition-transform shadow-lg text-left"
+        >
+          <div className="text-5xl mb-3">📝</div>
+          <h2 className="text-xl font-bold mb-1">Simulacro Evaluación</h2>
+          <p className="text-xs opacity-90">Problemas · Multiplicaciones · Examen</p>
+          <div className="mt-3 text-xs font-semibold bg-white/20 rounded-full px-3 py-1 inline-block">¡Para tu examen mañana!</div>
+        </button>
+
+        <p className="md:col-span-4 text-center text-xs text-gray-400 mt-2">
           Created By: Ing Erika Contreras alias tu Mamá
         </p>
       </div>
@@ -3094,6 +3110,425 @@ const PENITENCIAS = [
   { emoji: "🦋", texto: "¡Vuela como mariposa\nbatiendo los brazos despacio!" },
   { emoji: "🐍", texto: "¡Arrastra la pancita\npor el suelo como serpiente!" },
 ];
+
+// ===== SIMULACRO DE EVALUACIÓN MATEMÁTICA =====
+const mathExamProblems = [
+  // Problemas donde se debe identificar la operación
+  {
+    id: "problem-1",
+    type: "identify-operation",
+    question: "Carlos compró 45 cuadernos y cada uno cuesta $200. ¿Cuánto pagó en total?",
+    options: ["Suma", "Resta", "Multiplicación", "División"],
+    correct: 2, // Multiplicación
+    explanation: "Multiplicamos 45 × 200 = 9,000 porque cada cuaderno cuesta $200 y compró 45."
+  },
+  {
+    id: "problem-2", 
+    type: "identify-operation",
+    question: "María tenía 50 caramelos y regaló 15 a sus amigos. ¿Cuántos caramelos le quedaron?",
+    options: ["Suma", "Resta", "Multiplicación", "División"],
+    correct: 1, // Resta
+    explanation: "Restamos 50 - 15 = 35 porque regaló caramelos de los que tenía."
+  },
+  {
+    id: "problem-3",
+    type: "identify-operation",
+    question: "Juan tiene 12 cajas con 8 manzanas cada una. ¿Cuántas manzanas tiene en total?",
+    options: ["Suma", "Resta", "Multiplicación", "División"],
+    correct: 2, // Multiplicación
+    explanation: "Multiplicamos 12 × 8 = 96 porque cada caja tiene 8 manzanas y tiene 12 cajas."
+  },
+  {
+    id: "problem-4",
+    type: "identify-operation",
+    question: "Ana tenía 25 lápices y compró 30 más. ¿Cuántos lápices tiene ahora?",
+    options: ["Suma", "Resta", "Multiplicación", "División"],
+    correct: 0, // Suma
+    explanation: "Sumamos 25 + 30 = 55 porque añadió lápices a los que ya tenía."
+  },
+  {
+    id: "problem-5",
+    type: "identify-operation",
+    question: "En la escuela hay 3 grupos con 15 estudiantes cada uno. ¿Cuántos estudiantes hay en total?",
+    options: ["Suma", "Resta", "Multiplicación", "División"],
+    correct: 2, // Multiplicación
+    explanation: "Multiplicamos 3 × 15 = 45 porque cada grupo tiene 15 estudiantes y hay 3 grupos."
+  },
+  // Operaciones combinadas (4 ejemplos)
+  {
+    id: "combined-1",
+    type: "combined-operations",
+    question: "Calcula: (8 × 3) + (4 × 2)",
+    options: ["28", "30", "32", "34"],
+    correct: 2, // 32
+    explanation: "Primero: 8 × 3 = 24. Segundo: 4 × 2 = 8. Luego: 24 + 8 = 32"
+  },
+  {
+    id: "combined-2",
+    type: "combined-operations",
+    question: "Calcula: (6 × 4) - (3 × 5)",
+    options: ["6", "9", "12", "15"],
+    correct: 1, // 9
+    explanation: "Primero: 6 × 4 = 24. Segundo: 3 × 5 = 15. Luego: 24 - 15 = 9"
+  },
+  {
+    id: "combined-3",
+    type: "combined-operations",
+    question: "Calcula: (9 × 2) + (7 × 3)",
+    options: ["35", "37", "39", "41"],
+    correct: 2, // 39
+    explanation: "Primero: 9 × 2 = 18. Segundo: 7 × 3 = 21. Luego: 18 + 21 = 39"
+  },
+  {
+    id: "combined-4",
+    type: "combined-operations",
+    question: "Calcula: (7 × 5) - (2 × 8)",
+    options: ["15", "17", "19", "21"],
+    correct: 2, // 19
+    explanation: "Primero: 7 × 5 = 35. Segundo: 2 × 8 = 16. Luego: 35 - 16 = 19"
+  },
+  // Multiplicaciones agrupadas (4 ejemplos)
+  {
+    id: "grouped-1",
+    type: "grouped-multiplication",
+    question: "Calcula: (2 × 4) × (5 × 4)",
+    options: ["140", "150", "160", "170"],
+    correct: 2, // 160
+    explanation: "Primero: 2 × 4 = 8. Segundo: 5 × 4 = 20. Luego: 8 × 20 = 160"
+  },
+  {
+    id: "grouped-2",
+    type: "grouped-multiplication",
+    question: "Calcula: (3 × 5) × (4 × 6)",
+    options: ["300", "320", "340", "360"],
+    correct: 3, // 360
+    explanation: "Primero: 3 × 5 = 15. Segundo: 4 × 6 = 24. Luego: 15 × 24 = 360"
+  },
+  {
+    id: "grouped-3",
+    type: "grouped-multiplication",
+    question: "Calcula: (6 × 3) × (2 × 7)",
+    options: ["242", "252", "262", "272"],
+    correct: 1, // 252
+    explanation: "Primero: 6 × 3 = 18. Segundo: 2 × 7 = 14. Luego: 18 × 14 = 252"
+  },
+  {
+    id: "grouped-4",
+    type: "grouped-multiplication",
+    question: "Calcula: (4 × 5) × (3 × 7)",
+    options: ["400", "420", "440", "460"],
+    correct: 1, // 420
+    explanation: "Primero: 4 × 5 = 20. Segundo: 3 × 7 = 21. Luego: 20 × 21 = 420"
+  },
+  // Multiplicaciones de 3 cifras por 2 cifras (5 ejemplos)
+  {
+    id: "three-two-1",
+    type: "three-by-two",
+    question: "Calcula: 345 × 56",
+    options: ["18,920", "19,320", "19,520", "20,020"],
+    correct: 1, // 19,320
+    explanation: "345 × 56 = 19,320"
+  },
+  {
+    id: "three-two-2",
+    type: "three-by-two",
+    question: "Calcula: 567 × 23",
+    options: ["12,941", "13,041", "13,141", "13,241"],
+    correct: 1, // 13,041
+    explanation: "567 × 23 = 13,041"
+  },
+  {
+    id: "three-two-3",
+    type: "three-by-two",
+    question: "Calcula: 423 × 45",
+    options: ["18,835", "19,035", "19,235", "19,435"],
+    correct: 1, // 19,035
+    explanation: "423 × 45 = 19,035"
+  },
+  {
+    id: "three-two-4",
+    type: "three-by-two",
+    question: "Calcula: 678 × 34",
+    options: ["22,852", "23,052", "23,252", "23,452"],
+    correct: 1, // 23,052
+    explanation: "678 × 34 = 23,052"
+  },
+  {
+    id: "three-two-5",
+    type: "three-by-two",
+    question: "Calcula: 289 × 67",
+    options: ["19,163", "19,363", "19,563", "19,763"],
+    correct: 1, // 19,363
+    explanation: "289 × 67 = 19,363"
+  }
+];
+
+const MathExamGame = ({ setGameMode, setStars }) => {
+  const [phase, setPhase] = useState("menu"); // menu, exam, results
+  const [currentProblem, setCurrentProblem] = useState(0);
+  const [selectedAnswer, setSelectedAnswer] = useState(null);
+  const [answered, setAnswered] = useState(false);
+  const [isCorrect, setIsCorrect] = useState(null);
+  const [score, setScore] = useState(0);
+  const [answers, setAnswers] = useState([]);
+  const [showExplanation, setShowExplanation] = useState(false);
+
+  const startExam = () => {
+    setCurrentProblem(0);
+    setScore(0);
+    setAnswers([]);
+    setSelectedAnswer(null);
+    setAnswered(false);
+    setIsCorrect(null);
+    setShowExplanation(false);
+    setPhase("exam");
+  };
+
+  const handleAnswer = (answerIndex) => {
+    if (answered) return;
+    
+    setSelectedAnswer(answerIndex);
+    setAnswered(true);
+    
+    const problem = mathExamProblems[currentProblem];
+    const correct = answerIndex === problem.correct;
+    setIsCorrect(correct);
+    
+    if (correct) {
+      setScore(prev => prev + 1);
+    }
+    
+    setAnswers(prev => [...prev, {
+      problemId: problem.id,
+      question: problem.question,
+      selected: answerIndex,
+      correct: problem.correct,
+      isCorrect: correct
+    }]);
+    
+    setShowExplanation(true);
+  };
+
+  const nextProblem = () => {
+    if (currentProblem < mathExamProblems.length - 1) {
+      setCurrentProblem(prev => prev + 1);
+      setSelectedAnswer(null);
+      setAnswered(false);
+      setIsCorrect(null);
+      setShowExplanation(false);
+    } else {
+      // Examen terminado
+      if (score >= 8) {
+        setStars(prev => prev + 5);
+      }
+      setPhase("results");
+    }
+  };
+
+  const goBack = () => {
+    setPhase("menu");
+  };
+
+  if (phase === "menu") {
+    return (
+      <div className="bg-white rounded-3xl shadow-2xl p-8 text-center">
+        <div className="mb-6">
+          <BookOpen className="w-20 h-20 mx-auto text-blue-500 mb-4" />
+          <h1 className="text-4xl font-bold text-transparent bg-clip-text bg-gradient-to-r from-blue-600 to-purple-600 mb-2">
+            Simulacro de Evaluación
+          </h1>
+          <p className="text-gray-600 text-lg">
+            ¡Practica para tu examen de matemáticas!
+          </p>
+        </div>
+
+        <div className="bg-blue-50 rounded-2xl p-6 mb-6">
+          <h3 className="text-xl font-bold text-blue-800 mb-3">📋 Contenido del Simulacro</h3>
+          <div className="text-left text-gray-700 space-y-2">
+            <p>✅ <strong>5 problemas</strong> para identificar la operación correcta</p>
+            <p>✅ <strong>4 operaciones combinadas</strong> como (7×2)-(5×3)</p>
+            <p>✅ <strong>4 multiplicaciones agrupadas</strong> como (2×4)×(5×8)</p>
+            <p>✅ <strong>5 multiplicaciones</strong> de 3 cifras × 2 cifras como 345×56</p>
+            <p>✅ <strong>Explicaciones</strong> para cada respuesta</p>
+            <p>✅ <strong>Resultados</strong> detallados al final</p>
+          </div>
+        </div>
+
+        <div className="space-y-4">
+          <button
+            onClick={startExam}
+            className="w-full bg-gradient-to-r from-blue-500 to-purple-600 text-white rounded-2xl p-4 text-xl font-bold hover:scale-105 transition-transform shadow-lg"
+          >
+            🚀 Comenzar Simulacro
+          </button>
+          <button
+            onClick={() => setGameMode("menu")}
+            className="w-full bg-gray-200 text-gray-700 rounded-2xl p-4 text-lg font-semibold hover:bg-gray-300 transition-colors"
+          >
+            ← Volver al Menú Principal
+          </button>
+        </div>
+      </div>
+    );
+  }
+
+  if (phase === "exam") {
+    const problem = mathExamProblems[currentProblem];
+    const progress = ((currentProblem + 1) / mathExamProblems.length) * 100;
+
+    return (
+      <div className="bg-white rounded-3xl shadow-2xl p-8">
+        <div className="mb-6">
+          <div className="flex justify-between items-center mb-4">
+            <h2 className="text-2xl font-bold text-gray-800">
+              Pregunta {currentProblem + 1} de {mathExamProblems.length}
+            </h2>
+            <div className="text-sm font-semibold text-blue-600">
+              Puntuación: {score}/{mathExamProblems.length}
+            </div>
+          </div>
+          
+          <div className="w-full bg-gray-200 rounded-full h-3 mb-6">
+            <div 
+              className="bg-gradient-to-r from-blue-500 to-purple-600 h-3 rounded-full transition-all duration-300"
+              style={{ width: `${progress}%` }}
+            ></div>
+          </div>
+        </div>
+
+        <div className="bg-gradient-to-br from-blue-50 to-purple-50 rounded-2xl p-6 mb-6">
+          <div className="flex items-start gap-4">
+            <div className="text-4xl">
+              {problem.type === "identify-operation" ? "🧮" : 
+               problem.type === "combined-operations" ? "🔢" :
+               problem.type === "grouped-multiplication" ? "📊" :
+               problem.type === "three-by-two" ? "✖️" : "🧮"}
+            </div>
+            <div className="flex-1">
+              <p className="text-xl font-semibold text-gray-800 leading-relaxed">
+                {problem.question}
+              </p>
+            </div>
+          </div>
+        </div>
+
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mb-6">
+          {problem.options.map((option, index) => (
+            <button
+              key={index}
+              onClick={() => handleAnswer(index)}
+              disabled={answered}
+              className={`p-4 rounded-xl text-lg font-semibold transition-all ${
+                answered
+                  ? index === problem.correct
+                    ? "bg-green-500 text-white border-2 border-green-600"
+                    : selectedAnswer === index
+                    ? "bg-red-500 text-white border-2 border-red-600"
+                    : "bg-gray-100 text-gray-400 cursor-not-allowed"
+                  : "bg-gray-100 hover:bg-blue-100 text-gray-800 border-2 border-gray-200 hover:border-blue-400"
+              }`}
+            >
+              {option}
+            </button>
+          ))}
+        </div>
+
+        {showExplanation && (
+          <div className={`rounded-2xl p-6 mb-6 ${isCorrect ? "bg-green-50 border-2 border-green-200" : "bg-red-50 border-2 border-red-200"}`}>
+            <div className="flex items-start gap-3">
+              <div className="text-3xl">
+                {isCorrect ? "✅" : "❌"}
+              </div>
+              <div>
+                <p className="font-bold text-lg mb-2">
+                  {isCorrect ? "¡Correcto!" : "Incorrecto"}
+                </p>
+                <p className="text-gray-700">
+                  <strong>Explicación:</strong> {problem.explanation}
+                </p>
+              </div>
+            </div>
+          </div>
+        )}
+
+        {answered && (
+          <button
+            onClick={nextProblem}
+            className="w-full bg-gradient-to-r from-blue-500 to-purple-600 text-white rounded-2xl p-4 text-xl font-bold hover:scale-105 transition-transform shadow-lg"
+          >
+            {currentProblem < mathExamProblems.length - 1 ? "Siguiente Pregunta →" : "Ver Resultados 🏆"}
+          </button>
+        )}
+      </div>
+    );
+  }
+
+  if (phase === "results") {
+    const percentage = (score / mathExamProblems.length) * 100;
+    const passed = percentage >= 80;
+
+    return (
+      <div className="bg-white rounded-3xl shadow-2xl p-8 text-center">
+        <div className="mb-6">
+          <div className="text-6xl mb-4">
+            {passed ? "🎉" : "📚"}
+          </div>
+          <h1 className="text-4xl font-bold text-transparent bg-clip-text bg-gradient-to-r from-blue-600 to-purple-600 mb-2">
+            {passed ? "¡Excelente Trabajo!" : "Sigue Practicando"}
+          </h1>
+          <p className="text-gray-600 text-lg">
+            Resultados del Simulacro
+          </p>
+        </div>
+
+        <div className={`rounded-2xl p-8 mb-6 ${passed ? "bg-green-50 border-2 border-green-200" : "bg-orange-50 border-2 border-orange-200"}`}>
+          <div className="text-5xl font-bold mb-2">
+            {score}/{mathExamProblems.length}
+          </div>
+          <p className="text-xl text-gray-700">
+            {percentage}% de aciertos
+          </p>
+          <p className="text-sm text-gray-600 mt-2">
+            {passed ? "¡Estás listo para tu examen!" : "Repasa los conceptos y vuelve a intentarlo"}
+          </p>
+        </div>
+
+        <div className="bg-gray-50 rounded-2xl p-6 mb-6 text-left">
+          <h3 className="text-xl font-bold text-gray-800 mb-4">📊 Detalle de Respuestas</h3>
+          <div className="space-y-3">
+            {answers.map((answer, index) => (
+              <div key={index} className={`flex items-center gap-3 p-3 rounded-lg ${answer.isCorrect ? "bg-green-100" : "bg-red-100"}`}>
+                <div className="text-2xl">
+                  {answer.isCorrect ? "✅" : "❌"}
+                </div>
+                <div className="flex-1">
+                  <p className="font-semibold text-sm text-gray-800">
+                    {index + 1}. {answer.question}
+                  </p>
+                </div>
+              </div>
+            ))}
+          </div>
+        </div>
+
+        <div className="space-y-4">
+          <button
+            onClick={startExam}
+            className="w-full bg-gradient-to-r from-blue-500 to-purple-600 text-white rounded-2xl p-4 text-xl font-bold hover:scale-105 transition-transform shadow-lg"
+          >
+            🔄 Intentar de Nuevo
+          </button>
+          <button
+            onClick={() => setGameMode("menu")}
+            className="w-full bg-gray-200 text-gray-700 rounded-2xl p-4 text-lg font-semibold hover:bg-gray-300 transition-colors"
+          >
+            ← Volver al Menú Principal
+          </button>
+        </div>
+      </div>
+    );
+  }
+};
 
 // ===== TABLAS DE MULTIPLICAR =====
 const MultiplicationGame = ({ setGameMode, setStars, multiStats, setMultiStats }) => {
