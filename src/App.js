@@ -3,7 +3,6 @@ import {
   Check,
   X,
   ArrowUp,
-  ArrowDown,
   ArrowLeft,
   ArrowRight,
   RotateCw,
@@ -17,6 +16,7 @@ import {
   Award,
   BookOpen,
 } from "lucide-react";
+import LandingPage from "./LandingPage";
 
 // ===== DATOS DE LECTURA CRÍTICA =====
 const readingStories = [
@@ -406,8 +406,7 @@ const readingStories = [
   },
 ];
 
-const PixelRobotGame = () => {
-  const [currentLevel, setCurrentLevel] = useState(0);
+const PixelRobotGame = ({ onBackToLanding }) => {
   const [gameMode, setGameMode] = useState("menu"); // menu, pixel, robot, analysis, reading, readingStats, mathExam
   const [stars, setStars] = useState(0);
   const [readingStats, setReadingStats] = useState(() => {
@@ -1068,7 +1067,7 @@ const PixelRobotGame = () => {
     <div className="min-h-screen bg-gradient-to-br from-purple-600 via-blue-500 to-cyan-400 p-4">
       <div className="max-w-6xl mx-auto">
         {gameMode === "menu" && (
-          <MainMenu setGameMode={setGameMode} stars={stars} />
+          <MainMenu setGameMode={setGameMode} stars={stars} onBackToLanding={onBackToLanding} />
         )}
         {gameMode === "pixel" && (
           <PixelArtGame
@@ -1130,10 +1129,18 @@ const PixelRobotGame = () => {
   );
 };
 
-const MainMenu = ({ setGameMode, stars }) => {
+const MainMenu = ({ setGameMode, stars, onBackToLanding }) => {
   return (
-    <div className="bg-white rounded-3xl shadow-2xl p-8 text-center">
+    <div className="bg-white rounded-3xl shadow-2xl p-8 text-center relative">
       <div className="mb-6">
+        {onBackToLanding && (
+          <button
+            onClick={onBackToLanding}
+            className="absolute top-4 left-4 bg-gray-100 hover:bg-gray-200 text-gray-700 px-4 py-2 rounded-full font-semibold transition-colors"
+          >
+            ← Volver
+          </button>
+        )}
         <Trophy className="w-20 h-20 mx-auto text-yellow-500 mb-4" />
         <h1 className="text-5xl font-bold text-transparent bg-clip-text bg-gradient-to-r from-purple-600 to-blue-500 mb-2">
           Curso Programación para Samu
@@ -1260,11 +1267,6 @@ const PixelArtGame = ({
   const currentLevel = levels[currentLevelIndex];
   const currentDrawing = currentLevel.drawings[currentDrawingIndex];
 
-  useEffect(() => {
-    initializeGrid();
-    setStartTime(Date.now());
-  }, [currentLevelIndex, currentDrawingIndex]);
-
   const initializeGrid = () => {
     const grid = Array(currentDrawing.grid)
       .fill(null)
@@ -1276,6 +1278,11 @@ const PixelArtGame = ({
     setMistakes(0);
     setPatternViewCount(1);
   };
+
+  useEffect(() => {
+    initializeGrid();
+    setStartTime(Date.now());
+  }, [currentLevelIndex, currentDrawingIndex]);
 
   const toggleCell = (row, col) => {
     if (showPattern) return;
@@ -2029,10 +2036,6 @@ const RobotGame = ({ levels, setGameMode, setStars }) => {
 
   const currentLevel = levels[currentLevelIndex];
 
-  useEffect(() => {
-    resetLevel();
-  }, [currentLevelIndex]);
-
   const resetLevel = () => {
     setRobotPos(currentLevel.start);
     setCommands([]);
@@ -2040,6 +2043,10 @@ const RobotGame = ({ levels, setGameMode, setStars }) => {
     setShowError(false);
     setIsRunning(false);
   };
+
+  useEffect(() => {
+    resetLevel();
+  }, [currentLevelIndex]);
 
   const addCommand = (cmd) => {
     if (commands.length < currentLevel.maxCommands && !isRunning) {
@@ -3323,10 +3330,6 @@ const MathExamGame = ({ setGameMode, setStars }) => {
       }
       setPhase("results");
     }
-  };
-
-  const goBack = () => {
-    setPhase("menu");
   };
 
   if (phase === "menu") {
@@ -5447,4 +5450,23 @@ const LongMultiplicationGame = ({ setGameMode, setStars, longMultiStats, setLong
   return null;
 };
 
-export default PixelRobotGame;
+// Main App component to handle navigation between Landing Page and Game
+const App = () => {
+  const [showLanding, setShowLanding] = useState(true);
+
+  const handleStartApp = () => {
+    setShowLanding(false);
+  };
+
+  const handleBackToLanding = () => {
+    setShowLanding(true);
+  };
+
+  if (showLanding) {
+    return <LandingPage onStartApp={handleStartApp} />;
+  }
+
+  return <PixelRobotGame onBackToLanding={handleBackToLanding} />;
+};
+
+export default App;
