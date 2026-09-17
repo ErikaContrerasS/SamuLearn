@@ -1,0 +1,66 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1000 320">
+  <defs>
+    <filter id="shadow" x="-20%" y="-20%" width="140%" height="140%">
+      <feDropShadow dx="0" dy="6" stdDeviation="6" flood-opacity=".12"/>
+    </filter>
+  </defs>
+
+  <!-- Mascot -->
+  <g transform="translate(35 28)" filter="url(#shadow)">
+    <!-- colorful crest -->
+    <ellipse cx="118" cy="22" rx="24" ry="12" fill="#A78BFA" transform="rotate(-18 118 22)"/>
+    <ellipse cx="82" cy="25" rx="25" ry="12" fill="#F4B942" transform="rotate(18 82 25)"/>
+    <ellipse cx="53" cy="52" rx="24" ry="11" fill="#FF6B6B" transform="rotate(-25 53 52)"/>
+    <ellipse cx="143" cy="53" rx="24" ry="11" fill="#6FCF97" transform="rotate(25 143 53)"/>
+
+    <!-- body -->
+    <ellipse cx="100" cy="132" rx="78" ry="91" fill="#6FCF97"/>
+    <ellipse cx="100" cy="158" rx="52" ry="56" fill="#FFF7E9"/>
+
+    <!-- ears/fins -->
+    <ellipse cx="29" cy="121" rx="17" ry="31" fill="#57B987" transform="rotate(18 29 121)"/>
+    <ellipse cx="171" cy="121" rx="17" ry="31" fill="#57B987" transform="rotate(-18 171 121)"/>
+
+    <!-- eyes -->
+    <ellipse cx="73" cy="111" rx="20" ry="28" fill="#5B3E34"/>
+    <ellipse cx="127" cy="111" rx="20" ry="28" fill="#5B3E34"/>
+    <circle cx="67" cy="102" r="7" fill="white"/>
+    <circle cx="121" cy="102" r="7" fill="white"/>
+
+    <!-- cheeks -->
+    <circle cx="52" cy="143" r="10" fill="#FF9A8F" opacity=".85"/>
+    <circle cx="148" cy="143" r="10" fill="#FF9A8F" opacity=".85"/>
+
+    <!-- smile -->
+    <path d="M83 137 Q100 154 117 137 Q116 163 100 164 Q84 163 83 137Z" fill="#5B3E34"/>
+    <path d="M92 153 Q100 158 108 153 Q106 164 100 164 Q94 164 92 153Z" fill="#FF6B6B"/>
+
+    <!-- backpack -->
+    <path d="M18 177 Q18 158 36 158 H63 Q76 158 76 174 V220 Q76 232 63 232 H31 Q18 232 18 219Z" fill="#F4B942"/>
+    <path d="M33 158 Q33 143 48 143 Q63 143 63 158" fill="none" stroke="#E3A52D" stroke-width="8" stroke-linecap="round"/>
+    <path d="M47 185 l5 10 11 1 -8 7 2 11 -10 -5 -10 5 2 -11 -8 -7 11 -1z" fill="#FFF7E9"/>
+
+    <!-- walking leg -->
+    <path d="M86 214 Q70 237 55 242" fill="none" stroke="#57B987" stroke-width="24" stroke-linecap="round"/>
+    <path d="M116 214 Q139 232 151 239" fill="none" stroke="#57B987" stroke-width="24" stroke-linecap="round"/>
+
+    <!-- motion spark -->
+    <path d="M190 73 l8 -18 M204 87 l18 -8 M196 99 l14 7" stroke="#F4B942" stroke-width="7" stroke-linecap="round"/>
+  </g>
+
+  <!-- Wordmark -->
+  <g font-family="Arial Rounded MT Bold, Nunito, Quicksand, sans-serif" font-weight="800" font-size="108" letter-spacing="-5">
+    <text x="250" y="198" fill="#FF6B6B">A</text>
+    <text x="320" y="198" fill="#F4B942">n</text>
+    <text x="385" y="198" fill="#6FCF97">d</text>
+    <text x="455" y="198" fill="#A78BFA">a</text>
+    <text x="520" y="198" fill="#FF6B6B">w</text>
+    <text x="615" y="198" fill="#F4B942">a</text>
+    <text x="680" y="198" fill="#6FCF97">n</text>
+    <text x="748" y="198" fill="#A78BFA">d</text>
+    <text x="818" y="198" fill="#FF6B6B">a</text>
+  </g>
+
+  <!-- subtle baseline -->
+  <path d="M254 222 Q575 245 890 222" fill="none" stroke="#FFF7E9" stroke-width="8" stroke-linecap="round"/>
+</svg>
